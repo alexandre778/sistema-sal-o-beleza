@@ -1,0 +1,53 @@
+.dashboard {
+  padding: 3rem;
+  min-height: 100vh;
+  background: #f8f8f8;
+}
+
+.dashboard h1 {
+  margin-bottom: 2rem;
+  color: #e75480;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+th, td {
+  padding: 1rem;
+  text-align: left;
+}
+
+th {
+  background: #e75480;
+  color: white;
+}
+
+tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+button {
+  background: #ff4d6d;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #d6336c;
+}
+
+.empty {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+}
