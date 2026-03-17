@@ -1,55 +1,45 @@
-// src/services/api.ts
+// src/app/api/agendamentos/route.ts
+const globalForAgendamentos = globalThis as unknown as {
+  agendamentos?: Agendamento[];
+};
 
-export async function get<T>(url: string): Promise<T> {
-  const res = await fetch(url);
-
-  if (!res.ok) {
-    throw new Error("Erro na requisição GET");
-  }
-
-  return res.json();
+if (!globalForAgendamentos.agendamentos) {
+  globalForAgendamentos.agendamentos = [];
 }
 
-export async function post<T, B>(url: string, body: B): Promise<T> {
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  });
-
-  if (!res.ok) {
-    throw new Error("Erro na requisição POST");
-  }
-
-  return res.json();
+interface Agendamento {
+  id: string;
+  nome: string;
+  telefone: string;
+  servico: string;
+  data: string;
+  horario: string;
 }
 
-export async function put<T, B>(url: string, body: B): Promise<T> {
-  const res = await fetch(url, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  });
-
-  if (!res.ok) {
-    throw new Error("Erro na requisição PUT");
-  }
-
-  return res.json();
+export async function GET() {
+  return Response.json(globalForAgendamentos.agendamentos);
 }
 
-export async function del<T>(url: string): Promise<T> {
-  const res = await fetch(url, {
-    method: "DELETE",
-  });
+export async function POST(req: Request) {
+  const data: Omit<Agendamento, "id"> = await req.json();
 
-  if (!res.ok) {
-    throw new Error("Erro na requisição DELETE");
+  const existe = globalForAgendamentos.agendamentos!.find(
+    (a) => a.data === data.data && a.horario === data.horario
+  );
+
+  if (existe) {
+    return new Response(
+      JSON.stringify({ error: "Horário já agendado para essa data." }),
+      { status: 400 }
+    );
   }
 
-  return res.json();
+  const novo: Agendamento = {
+    id: crypto.randomUUID(),
+    ...data,
+  };
+
+  globalForAgendamentos.agendamentos!.push(novo);
+
+  return Response.json(novo);
 }
